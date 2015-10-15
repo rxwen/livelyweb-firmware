@@ -23,11 +23,11 @@ type VersionInfo struct {
 var versions = map[string]VersionInfo{
 	"v1.0.0": VersionInfo{
 		Version: "v1.0.0",
-		Path:    "./main.go",
+		Path:    "./update_v1.0.0.zip",
 	},
 	"v1.0.1": VersionInfo{
 		Version: "v1.0.1",
-		Path:    "./main2.go",
+		Path:    "./update_v1.0.1.zip",
 	},
 }
 
