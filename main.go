@@ -67,6 +67,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	reader, _ := os.Open(vi.Path)
+	defer reader.Close()
 	fi, _ := reader.Stat()
 	w.Header().Set("Content-Disposition", "attachment; filename=a.txt")
 	w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
