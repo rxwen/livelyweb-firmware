@@ -46,7 +46,6 @@ func main() {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome!")
 	json.NewEncoder(w).Encode(getAvailableVersions())
 }
 
