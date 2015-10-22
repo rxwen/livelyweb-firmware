@@ -62,7 +62,6 @@ func download(w http.ResponseWriter, r *http.Request) {
 	vi := getAvailableVersions()[version]
 	if _, err := os.Stat(vi.Path); os.IsNotExist(err) {
 		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintln(w, vi.Path+" not found")
 		return
 	}
 	reader, _ := os.Open(vi.Path)
