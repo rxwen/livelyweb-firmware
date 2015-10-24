@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -36,7 +37,6 @@ func getAvailableVersions() map[string]VersionInfo {
 }
 
 func main() {
-
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", Index)
 	router.HandleFunc("/version/{"+VAR_NAME_VERSION+"}", showVersion)
@@ -68,7 +68,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 
 	defer reader.Close()
 	fi, _ := reader.Stat()
-	w.Header().Set("Content-Disposition", "attachment; filename=a.txt")
+	w.Header().Set("Content-Disposition", "attachment; filename="+filepath.Base(vi.Path))
 	w.Header().Set("Content-Type", r.Header.Get("Content-Type"))
 	w.Header().Set("Content-Length", strconv.FormatInt(fi.Size(), 10))
 	io.Copy(w, reader)
