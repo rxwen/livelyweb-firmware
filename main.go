@@ -64,6 +64,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+
 	reader, _ := os.Open(vi.Path)
 
 	defer reader.Close()
