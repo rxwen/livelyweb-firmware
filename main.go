@@ -60,6 +60,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars[VAR_NAME_VERSION]
 	vi := getAvailableVersions()[version]
+
 	if _, err := os.Stat(vi.Path); os.IsNotExist(err) {
 		w.WriteHeader(http.StatusNotFound)
 		return
