@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -27,8 +26,8 @@ var versions = map[string]VersionInfo{
 		Path:    "./update_v1.0.0.zip",
 	},
 	"v1.0.1": VersionInfo{
-		Version: "v1.0.1",
-		Path:    "./update_v1.0.1.zip",
+		Version: "v1.0.2",
+		Path:    "./update_v1.0.2.zip",
 	},
 }
 
@@ -38,14 +37,14 @@ func getAvailableVersions() map[string]VersionInfo {
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", Index)
+	router.HandleFunc("/", listVersion)
 	router.HandleFunc("/version/{"+VAR_NAME_VERSION+"}", showVersion)
 	router.HandleFunc("/download/{"+VAR_NAME_VERSION+"}", download)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
+func listVersion(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(getAvailableVersions())
 }
 
