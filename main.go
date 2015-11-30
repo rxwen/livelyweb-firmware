@@ -25,7 +25,7 @@ var versions = map[string]VersionInfo{
 		Version: "v1.0.0",
 		Path:    "./update_v1.0.0.zip",
 	},
-	"v1.0.1": VersionInfo{
+	"v1.0.2": VersionInfo{
 		Version: "v1.0.2",
 		Path:    "./update_v1.0.2.zip",
 	},
