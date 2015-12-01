@@ -2,12 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -20,7 +22,7 @@ type VersionInfo struct {
 	Checksum string `json:"checksum"`
 }
 
-var versions = map[string]VersionInfo{
+var versions2 = map[string]VersionInfo{
 	"v1.0.0": VersionInfo{
 		Version: "v1.0.0",
 		Path:    "./update_v1.0.0.zip",
@@ -31,7 +33,18 @@ var versions = map[string]VersionInfo{
 	},
 }
 
-func getAvailableVersions() map[string]VersionInfo {
+var versions = []VersionInfo{
+	VersionInfo{
+		Version: "v1.0.0",
+		Path:    "./update_v1.0.0.zip",
+	},
+	VersionInfo{
+		Version: "v1.0.2",
+		Path:    "./update_v1.0.2.zip",
+	},
+}
+
+func getAvailableVersions() []VersionInfo {
 	return versions
 }
 
@@ -45,21 +58,54 @@ func main() {
 }
 
 func listVersion(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(getAvailableVersions())
+	version := r.FormValue("version")
+	if len(version) > 0 {
+		fmt.Println("Check newer version against " + version)
+		results := make([]*VersionInfo, 0)
+		newerVersion := checkNewerVersionFor(version)
+		if newerVersion != nil {
+			results = append(results, newerVersion)
+		}
+		json.NewEncoder(w).Encode(results)
+	} else {
+		json.NewEncoder(w).Encode(versions)
+	}
+}
+
+func checkNewerVersionFor(version string) *VersionInfo {
+	for _, ele := range versions2 {
+		if strings.Compare(ele.Version, version) > 0 {
+			return &ele
+		}
+	}
+	return nil
+}
+
+func findVersion(version string) *VersionInfo {
+	for _, ele := range versions2 {
+		if strings.EqualFold(ele.Version, version) {
+			return &ele
+		}
+	}
+	return nil
 }
 
 func showVersion(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars[VAR_NAME_VERSION]
-	vi := getAvailableVersions()[version]
+	vi := findVersion(version)
 	json.NewEncoder(w).Encode(vi)
 }
 
 func download(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars[VAR_NAME_VERSION]
-	vi := getAvailableVersions()[version]
+	vi := findVersion(version)
 
+	if vi == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 	if _, err := os.Stat(vi.Path); os.IsNotExist(err) {
 		w.WriteHeader(http.StatusNotFound)
 		return
