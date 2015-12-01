@@ -18,7 +18,7 @@ const VAR_NAME_VERSION = "version"
 
 type VersionInfo struct {
 	Version  string `json:"version"`
-	Path     string `json:"path"`
+	Path     string `json:"-"` // this field doesn't need to be returned to client
 	Checksum string `json:"checksum"`
 }
 
@@ -28,8 +28,9 @@ var versions2 = map[string]VersionInfo{
 		Path:    "./update_v1.0.0.zip",
 	},
 	"v1.0.2": VersionInfo{
-		Version: "v1.0.2",
-		Path:    "./update_v1.0.2.zip",
+		Version:  "v1.0.2",
+		Path:     "./update_v1.0.2.zip",
+		Checksum: "8197e42759670f96d015be7f3d25b7fa01aba4df",
 	},
 }
 
