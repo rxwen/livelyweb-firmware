@@ -30,7 +30,7 @@ var versions2 = map[string]VersionInfo{
 	"v1.0.2": VersionInfo{
 		Version:  "v1.0.2",
 		Path:     "./update_v1.0.2.zip",
-		Checksum: "8197e42759670f96d015be7f3d25b7fa01aba4df",
+		Checksum: "c2a0e601af0da61e9015018a044749166a66123a",
 	},
 }
 
