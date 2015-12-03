@@ -22,26 +22,15 @@ type VersionInfo struct {
 	Checksum string `json:"checksum"`
 }
 
-var versions2 = map[string]VersionInfo{
-	"v1.0.0": VersionInfo{
-		Version: "v1.0.0",
-		Path:    "./update_v1.0.0.zip",
-	},
-	"v1.0.2": VersionInfo{
-		Version:  "v1.0.2",
-		Path:     "./update_v1.0.2.zip",
-		Checksum: "c2a0e601af0da61e9015018a044749166a66123a",
-	},
-}
-
 var versions = []VersionInfo{
 	VersionInfo{
 		Version: "v1.0.0",
 		Path:    "./update_v1.0.0.zip",
 	},
 	VersionInfo{
-		Version: "v1.0.2",
-		Path:    "./update_v1.0.2.zip",
+		Version:  "v1.0.2",
+		Path:     "./update_v1.0.2.zip",
+		Checksum: "c2a0e601af0da61e9015018a044749166a66123a",
 	},
 }
 
@@ -60,11 +49,13 @@ func main() {
 
 func listVersion(w http.ResponseWriter, r *http.Request) {
 	version := r.FormValue("version")
+	hwversion := r.FormValue("hwversion")
 	if len(version) > 0 {
-		fmt.Println("Check newer version against " + version)
+		fmt.Println("Check newer version against " + version + " hwversion: " + hwversion)
 		results := make([]*VersionInfo, 0)
 		newerVersion := checkNewerVersionFor(version)
 		if newerVersion != nil {
+			fmt.Println("append " + newerVersion.Version)
 			results = append(results, newerVersion)
 		}
 		json.NewEncoder(w).Encode(results)
@@ -74,7 +65,7 @@ func listVersion(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkNewerVersionFor(version string) *VersionInfo {
-	for _, ele := range versions2 {
+	for _, ele := range versions {
 		if strings.Compare(ele.Version, version) > 0 {
 			return &ele
 		}
@@ -83,7 +74,7 @@ func checkNewerVersionFor(version string) *VersionInfo {
 }
 
 func findVersion(version string) *VersionInfo {
-	for _, ele := range versions2 {
+	for _, ele := range versions {
 		if strings.EqualFold(ele.Version, version) {
 			return &ele
 		}
