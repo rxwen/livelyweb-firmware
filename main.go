@@ -25,11 +25,11 @@ type VersionInfo struct {
 var versions = []VersionInfo{
 	VersionInfo{
 		Version: "v1.0.0",
-		Path:    "./update_v1.0.0.zip",
+		Path:    "update_v1.0.0.zip",
 	},
 	VersionInfo{
 		Version:  "v1.0.2",
-		Path:     "./update_v1.0.2.zip",
+		Path:     "update_v1.0.2.zip",
 		Checksum: "c2a0e601af0da61e9015018a044749166a66123a",
 	},
 }
