@@ -28,9 +28,9 @@ var versions = []VersionInfo{
 		Path:    "update_v1.0.0.zip",
 	},
 	VersionInfo{
-		Version:  "v1.0.2",
-		Path:     "update_v1.0.2.zip",
-		Checksum: "c2a0e601af0da61e9015018a044749166a66123a",
+		Version:  "v1.0.3",
+		Path:     "update_v1.0.3.zip",
+		Checksum: "8a1553e2034111d38ec2ceda7690787a7f22af37",
 	},
 }
 
@@ -65,12 +65,14 @@ func listVersion(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkNewerVersionFor(version string) *VersionInfo {
+	var result *VersionInfo = nil
 	for _, ele := range versions {
 		if strings.Compare(ele.Version, version) > 0 {
-			return &ele
+			version = ele.Version
+			result = &ele
 		}
 	}
-	return nil
+	return result
 }
 
 func findVersion(version string) *VersionInfo {
