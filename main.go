@@ -24,13 +24,9 @@ type VersionInfo struct {
 
 var versions = []VersionInfo{
 	VersionInfo{
-		Version: "v1.0.0",
-		Path:    "update_v1.0.0.zip",
-	},
-	VersionInfo{
-		Version:  "v1.0.3",
-		Path:     "update_v1.0.3.zip",
-		Checksum: "8a1553e2034111d38ec2ceda7690787a7f22af37",
+		Version:  "v0.9.0",
+		Path:     "update_v0.9.0.zip",
+		Checksum: "bcd03044e8616b146b0bb8df886e0852cf1a8cb5",
 	},
 }
 
@@ -57,6 +53,9 @@ func listVersion(w http.ResponseWriter, r *http.Request) {
 		if newerVersion != nil {
 			fmt.Println("append " + newerVersion.Version)
 			results = append(results, newerVersion)
+		}
+		if len(results) < 1 {
+			fmt.Println("no newer version available now")
 		}
 		json.NewEncoder(w).Encode(results)
 	} else {
