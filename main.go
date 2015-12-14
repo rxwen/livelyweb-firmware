@@ -113,6 +113,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	fmt.Println("download: " + vi.Path)
 	if _, err := os.Stat(vi.Path); os.IsNotExist(err) {
 		w.WriteHeader(http.StatusNotFound)
 		return
