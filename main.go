@@ -32,6 +32,7 @@ func getAvailableVersions() []VersionInfo {
 		fmt.Println("failed to open " + CONFIG_FILE_NAME)
 		return versions
 	}
+	defer configFile.Close()
 
 	jsonParser := json.NewDecoder(configFile)
 	if err = jsonParser.Decode(&versions); err != nil {
@@ -119,7 +120,12 @@ func download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reader, _ := os.Open(vi.Path)
+	reader, err := os.Open(vi.Path)
+	if err != nil {
+		fmt.Println("failed to open " + CONFIG_FILE_NAME)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	defer reader.Close()
 	fi, _ := reader.Stat()
