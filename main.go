@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -29,14 +28,14 @@ func getAvailableVersions() []VersionInfo {
 	//versions := make([]VersionInfo, 0)
 	configFile, err := os.Open(CONFIG_FILE_NAME)
 	if err != nil {
-		fmt.Println("failed to open " + CONFIG_FILE_NAME)
+		log.Println("failed to open " + CONFIG_FILE_NAME)
 		return versions
 	}
 	defer configFile.Close()
 
 	jsonParser := json.NewDecoder(configFile)
 	if err = jsonParser.Decode(&versions); err != nil {
-		fmt.Println("parsing config file " + err.Error())
+		log.Println("parsing config file " + err.Error())
 		return versions
 	}
 	return versions
@@ -56,20 +55,20 @@ func listVersion(w http.ResponseWriter, r *http.Request) {
 	hwversion := r.FormValue(VAR_NAME_HARDWAREVERSION)
 	results := make([]VersionInfo, 0)
 	if len(version) > 0 {
-		fmt.Println("Check newer version against " + version + " hwversion: " + hwversion)
+		log.Println("Check newer version against " + version + " hwversion: " + hwversion)
 		newerVersion := checkNewerVersionFor(version)
 		if newerVersion != nil {
-			fmt.Println("append " + newerVersion.Version)
+			log.Println("append " + newerVersion.Version)
 			results = append(results, *newerVersion)
 		}
 		if len(results) < 1 {
-			fmt.Println("no newer version available now")
+			log.Println("no newer version available now")
 		} else {
 			results[len(results)-1].Path = ""
 		}
 	} else {
 		for index, ele := range getAvailableVersions() {
-			fmt.Println("append " + ele.Version)
+			log.Println("append " + ele.Version)
 			results = append(results, ele)
 			results[index].Path = ""
 		}
@@ -114,7 +113,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	fmt.Println("download: " + vi.Path)
+	log.Println("download: " + vi.Path)
 	if _, err := os.Stat(vi.Path); os.IsNotExist(err) {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -122,7 +121,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 
 	reader, err := os.Open(vi.Path)
 	if err != nil {
-		fmt.Println("failed to open " + CONFIG_FILE_NAME)
+		log.Println("failed to open " + CONFIG_FILE_NAME)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
