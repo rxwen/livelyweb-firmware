@@ -25,7 +25,6 @@ type VersionInfo struct {
 
 func getAvailableVersions() []VersionInfo {
 	var versions []VersionInfo
-	//versions := make([]VersionInfo, 0)
 	configFile, err := os.Open(CONFIG_FILE_NAME)
 	if err != nil {
 		log.Println("failed to open " + CONFIG_FILE_NAME)
