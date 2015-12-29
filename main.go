@@ -34,7 +34,7 @@ func getAvailableVersions() []VersionInfo {
 
 	jsonParser := json.NewDecoder(configFile)
 	if err = jsonParser.Decode(&versions); err != nil {
-		log.Println("parsing config file " + err.Error())
+		log.Println("error parsing config file " + err.Error())
 		return versions
 	}
 	return versions
