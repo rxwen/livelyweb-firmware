@@ -57,7 +57,7 @@ func listVersion(w http.ResponseWriter, r *http.Request) {
 		log.Println("Check newer version against " + version + " hwversion: " + hwversion)
 		newerVersion := checkNewerVersionFor(version)
 		if newerVersion != nil {
-			log.Println("append " + newerVersion.Version)
+			log.Println("append version " + newerVersion.Version)
 			results = append(results, *newerVersion)
 		}
 		if len(results) < 1 {
