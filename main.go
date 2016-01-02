@@ -3,13 +3,13 @@ package main
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 )
 
@@ -27,14 +27,14 @@ func getAvailableVersions() []VersionInfo {
 	var versions []VersionInfo
 	configFile, err := os.Open(CONFIG_FILE_NAME)
 	if err != nil {
-		log.Println("failed to open " + CONFIG_FILE_NAME)
+		log.Error("failed to open " + CONFIG_FILE_NAME)
 		return versions
 	}
 	defer configFile.Close()
 
 	jsonParser := json.NewDecoder(configFile)
 	if err = jsonParser.Decode(&versions); err != nil {
-		log.Println("error parsing config file " + err.Error())
+		log.Error("error parsing config file " + err.Error())
 		return versions
 	}
 	return versions
@@ -54,20 +54,20 @@ func listVersion(w http.ResponseWriter, r *http.Request) {
 	hwversion := r.FormValue(VAR_NAME_HARDWAREVERSION)
 	results := make([]VersionInfo, 0)
 	if len(version) > 0 {
-		log.Println("Check newer version against " + version + " hwversion: " + hwversion)
+		log.Info("Check newer version against " + version + " hwversion: " + hwversion)
 		newerVersion := checkNewerVersionFor(version)
 		if newerVersion != nil {
-			log.Println("append version " + newerVersion.Version)
+			log.Info("append version " + newerVersion.Version)
 			results = append(results, *newerVersion)
 		}
 		if len(results) < 1 {
-			log.Println("no newer version available now")
+			log.Warn("no newer version available now")
 		} else {
 			results[len(results)-1].Path = ""
 		}
 	} else {
 		for index, ele := range getAvailableVersions() {
-			log.Println("append " + ele.Version)
+			log.Info("append " + ele.Version)
 			results = append(results, ele)
 			results[index].Path = ""
 		}
@@ -106,22 +106,24 @@ func showVersion(w http.ResponseWriter, r *http.Request) {
 func download(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars[VAR_NAME_VERSION]
+	log.Info("download " + version)
 	vi := findVersion(version)
 
 	if vi == nil {
+		log.Warn("can't find version info for " + version)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	log.Println("check local file: " + vi.Path)
+	log.Info("check local file: " + vi.Path)
 	if _, err := os.Stat(vi.Path); os.IsNotExist(err) {
-		log.Println("local file: " + vi.Path + " doesn't exist")
+		log.Error("local file: " + vi.Path + " doesn't exist")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	reader, err := os.Open(vi.Path)
 	if err != nil {
-		log.Println("failed to open " + CONFIG_FILE_NAME)
+		log.Error("failed to open " + CONFIG_FILE_NAME)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

@@ -1,3 +1,4 @@
 package: github.com/rxwen/livelyweb-firmware
 import:
 - package: github.com/gorilla/mux
+- package: github.com/Sirupsen/logrus
