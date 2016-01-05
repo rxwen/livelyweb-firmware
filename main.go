@@ -106,7 +106,7 @@ func showVersion(w http.ResponseWriter, r *http.Request) {
 func download(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars[VAR_NAME_VERSION]
-	log.Info("download " + version)
+	log.Info("download package for " + version)
 	vi := findVersion(version)
 
 	if vi == nil {
