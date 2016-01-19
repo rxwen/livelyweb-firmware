@@ -100,7 +100,7 @@ func showVersion(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars[VAR_NAME_VERSION]
 	vi := findVersion(version)
-	vi.Path = ""
+	vi.Path = "" // set path to empty so that it won't be returned to client
 	json.NewEncoder(w).Encode(vi)
 }
 
