@@ -46,7 +46,7 @@ func main() {
 	router.HandleFunc("/version/{"+VAR_NAME_VERSION+"}", showVersion)
 	router.HandleFunc("/download/{"+VAR_NAME_VERSION+"}", download)
 
-	log.Info("start web server on port 8080")
+	log.Info("start firmware web server on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
